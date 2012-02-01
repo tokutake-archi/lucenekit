@@ -29,8 +29,7 @@
 	ASSIGN(handle, [NSFileHandle fileHandleForReadingAtPath: path]);
 	isClosed = NO;
 	NSFileManager *manager = [NSFileManager defaultManager];
-	NSDictionary *d = [manager fileAttributesAtPath: path
-					   traverseLink: YES];
+    NSDictionary *d = [manager attributesOfItemAtPath:path error:nil];
 	length = [[d objectForKey: NSFileSize] longValue];
 	return self;
 }

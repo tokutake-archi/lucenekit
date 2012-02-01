@@ -167,7 +167,7 @@
 		}
     }
 	
-	[manager movePath: old toPath: nu handler: nil];
+    [manager moveItemAtPath:old toPath:nu error:nil];
 }
 
 /** Creates a new, empty file in the directory with the given name.

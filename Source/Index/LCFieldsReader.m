@@ -6,7 +6,7 @@
 #include "GNUstep.h"
 
 /**
-* Class responsible for access to stored document fields.
+ * Class responsible for access to stored document fields.
  *
  * It uses &lt;segment&gt;.fdt and &lt;segment&gt;.fdx; files.
  *
@@ -74,17 +74,17 @@
 				if (d)
 				{
 					LCField *field = [[LCField alloc] initWithName: [fi name]
-															 data: d
+                                                              data: d
 															 store: LCStore_Compress];
 					[doc addField: field];
 					DESTROY(field);
-				//doc.add(new Field(fi.name, uncompress(b), Field.Store.COMPRESS));
+                    //doc.add(new Field(fi.name, uncompress(b), Field.Store.COMPRESS));
 				}
 			}
 			else
 			{
 				LCField *field = [[LCField alloc] initWithName: [fi name]
-														 data: AUTORELEASE([b copy])
+                                                          data: AUTORELEASE([b copy])
 														 store: LCStore_YES];
 				[doc addField: field];
 				DESTROY(field);
@@ -101,27 +101,27 @@
 				index = LCIndex_Untokenized;
 			else
 				index = LCIndex_NO;
-
-	LCTermVector_Type termVector = LCTermVector_NO;
-        if ([fi isTermVectorStored]) {
-          if ([fi isOffsetWithTermVectorStored]) {
-            if ([fi isPositionWithTermVectorStored]) {
-              termVector = LCTermVector_WithPositionsAndOffsets;
-            }                    
-            else {        
-              termVector = LCTermVector_WithOffsets;
+            
+            LCTermVector_Type termVector = LCTermVector_NO;
+            if ([fi isTermVectorStored]) {
+                if ([fi isOffsetWithTermVectorStored]) {
+                    if ([fi isPositionWithTermVectorStored]) {
+                        termVector = LCTermVector_WithPositionsAndOffsets;
+                    }                    
+                    else {        
+                        termVector = LCTermVector_WithOffsets;
+                    }
+                }
+                else if ([fi isPositionWithTermVectorStored]) {
+                    termVector = LCTermVector_WithPositions;
+                }
+                else {
+                    termVector = LCTermVector_YES;
+                }
             }
-          }
-          else if ([fi isPositionWithTermVectorStored]) {
-            termVector = LCTermVector_WithPositions;
-          }
-          else {
-            termVector = LCTermVector_YES;
-          }
-        }
-        else {
-          termVector = LCTermVector_NO;
-        }
+            else {
+                termVector = LCTermVector_NO;
+            }
 			
 			if (compressed) {
 				store = LCStore_Compress;
@@ -133,9 +133,9 @@
 														string: s
 														 store: store
 														 index: index
-			termVector: termVector];
+                                                    termVector: termVector];
 				[field setOmitNorms: [fi omitNorms]];
-
+                
 				[doc addField: field];
 				DESTROY(field);
 				DESTROY(s);

@@ -76,7 +76,8 @@ static NSString *FIELD_PATH = @"P";
 - (LCFSDirectory*) createFileDirectory
 {
     // FIXME should be the application support folder
-    NSString *supportPath = @".";
+    //NSString *supportPath = @".";
+    NSString *supportPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 
     NSString *path = [supportPath stringByAppendingPathComponent:@"index.idx"];
 
