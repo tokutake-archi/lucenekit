@@ -9,3 +9,5 @@ build
 *.perspectivev3
 *.perspectivev3s
 *.svn
+xcuserdata
+project.xcworkspace

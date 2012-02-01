@@ -13,7 +13,7 @@ A field is a section of a Document.  Each field has two parts, a name and a
 - (id) init
 {
 	self = [super init];
-	ASSIGN(name, [NSString stringWithCString: "body"]);
+	ASSIGN(name, [NSString stringWithCString: "body" encoding: NSUTF8StringEncoding]);
 	fieldsData = nil;
 	storeTermVector = NO;
 	storeOffsetWithTermVector = NO;

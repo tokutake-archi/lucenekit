@@ -43,7 +43,7 @@ class MyAnalyzer extends Analyzer {
     {
 		// FIXME: not i18n compatible
 		NSString *term = [token termText];
-		int k = stem(st, (char *)[term cString], [term length]);
+		int k = stem(st, (char *)[term UTF8String], [term length]);
 		NSString *sub = [term substringToIndex: k];
 		if (sub != term) // Yes, I mean object reference comparison here
 			[token setTermText: sub];

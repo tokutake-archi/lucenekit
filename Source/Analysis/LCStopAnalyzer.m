@@ -24,7 +24,7 @@
 - (id) initWithStopWords: (NSArray *) sw
 {
 	self = [super init];
-	stopWords = [[NSSet alloc] initWithSet: [LCStopFilter makeStopSet: sw]];
+	stopWords = [[NSMutableSet alloc] initWithSet: [LCStopFilter makeStopSet: sw]];
 	return self;
 }
 

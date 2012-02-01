@@ -309,7 +309,7 @@ NSDefaultMallocZone());
         if ((buffersCount * maxBufferSize) < length) 
             buffersCount++;
       
-        self->buffers = [[NSArray alloc] initWithCapacity: buffersCount];
+        self->buffers = [[NSMutableArray alloc] initWithCapacity: buffersCount];
         self->bufferSizes = calloc(buffersCount, sizeof(int));
         self->positions = calloc(buffersCount, sizeof(int));
       

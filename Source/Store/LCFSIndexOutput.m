@@ -90,8 +90,7 @@
 {
 	[handle synchronizeFile];
 	NSFileManager *manager = [NSFileManager defaultManager];
-	NSDictionary *d = [manager fileAttributesAtPath: path 
-					   traverseLink: YES];
+    NSDictionary *d = [manager attributesOfItemAtPath:path error:nil];
 	return [[d objectForKey: NSFileSize] unsignedLongLongValue];
 }
 

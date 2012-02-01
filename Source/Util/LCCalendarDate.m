@@ -25,8 +25,7 @@
 {
     id newDate = [[[LCCalendarDate alloc] initWithTimeIntervalSinceReferenceDate:[date timeIntervalSinceReferenceDate]] autorelease];
 
-    [newDate setCalendarFormat:formatString];
-    [newDate setTimeZone:timeZone];
+//    [newDate setCalendarFormat:formatString];
 
     return newDate;
 }

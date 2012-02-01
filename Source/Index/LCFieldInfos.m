@@ -67,9 +67,9 @@
     {
 		[self addName: [field name] isIndexed: [field isIndexed]
    isTermVectorStored: [field isTermVectorStored]
-   isStorePositionWithTermVector: [field isPositionWithTermVectorStored]
-   isStoreOffsetWithTermVector: [field isOffsetWithTermVectorStored]
-   omitNorms: [field omitNorms]];
+isStorePositionWithTermVector: [field isPositionWithTermVectorStored]
+isStoreOffsetWithTermVector: [field isOffsetWithTermVectorStored]
+            omitNorms: [field omitNorms]];
     }
 }
 

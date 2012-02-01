@@ -47,7 +47,7 @@
 {
 	if (isClosed)
 	{
-		NSLog(@"Error: %@ is closed");
+		NSLog(@"Error: %@ is closed", path);
 		return;
 	}
 	NSData *d = [handle readDataOfLength: len];

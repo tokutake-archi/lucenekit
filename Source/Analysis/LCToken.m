@@ -6,7 +6,7 @@
 - (id) init
 {
 	self = [super init];
-	ASSIGN(type, [NSString stringWithCString: "word"]);
+	ASSIGN(type, [NSString stringWithCString: "word" encoding:NSUTF8StringEncoding]);
 	positionIncrement = 1;
 	return self;
 }

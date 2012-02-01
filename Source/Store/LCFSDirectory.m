@@ -45,8 +45,7 @@
         }
 		else
         {
-			// Create directory
-			[manager createDirectoryAtPath: p attributes: nil];
+            [manager createDirectoryAtPath:p withIntermediateDirectories:NO attributes:nil error:nil];
 		}
     }
 	
@@ -54,27 +53,21 @@
 	return YES;
 }
 
-- (id) initWithPath: (NSString *) p create: (BOOL) b
+- (id) initWithPath: (NSString *) paramPath create: (BOOL) create
 {
 	BOOL isDir;
 	self = [self init];
 	ASSIGN(manager, [NSFileManager defaultManager]);
-	ASSIGNCOPY(path, p);
-	if (b) 
-    {
-		if ([self create] == NO)
-		{	
+	ASSIGNCOPY(path, paramPath);
+	if (create) {
+		if ([self create] == NO) {	
 			NSLog(@"Unable to create directory");
 			DESTROY(manager);
 			DESTROY(path);
 			return nil;
 		}
     }
-	if ([manager fileExistsAtPath: path isDirectory: &isDir] && isDir)
-    {
-    }
-	else
-    {
+	if (!([manager fileExistsAtPath: path isDirectory: &isDir] && isDir)) {
 		NSLog(@"Not a directory");
 		DESTROY(manager);
 		DESTROY(path);
@@ -93,7 +86,7 @@
 /** Returns an array of strings, one for each file in the directory. */
 - (NSArray *) fileList
 {
-	return [manager directoryContentsAtPath: path];
+    return [manager contentsOfDirectoryAtPath:path error:nil];
 }
 
 /** Returns true iff a file with the given name exists. */
@@ -107,8 +100,7 @@
 - (NSTimeInterval) fileModified: (NSString *) name
 {
 	NSString *p = [path stringByAppendingPathComponent: name];
-	NSDictionary *d = [manager fileAttributesAtPath: p
-					   traverseLink: NO];
+    NSDictionary *d = [manager attributesOfItemAtPath:p error:nil];
 	return [[d objectForKey: NSFileModificationDate] timeIntervalSince1970];
 }
 
@@ -116,19 +108,17 @@
 - (void) touchFile: (NSString *) name
 {
 	NSString *p = [path stringByAppendingPathComponent: name];
-	NSDictionary *d = [manager fileAttributesAtPath: p
-					   traverseLink: NO];
+    NSDictionary *d = [manager attributesOfItemAtPath:p error:nil];
 	NSMutableDictionary *n = [NSMutableDictionary dictionaryWithDictionary: d];
 	[n setObject: [NSDate date] forKey: NSFileModificationDate];
-	[manager changeFileAttributes: n atPath: p];
+    [manager setAttributes:n ofItemAtPath:p error:nil];
 }
 
 /** Returns the length in bytes of a file in the directory. */
 - (unsigned long long) fileLength: (NSString *) name
 {
 	NSString *p = [path stringByAppendingPathComponent: name];
-	NSDictionary *d = [manager fileAttributesAtPath: p
-									   traverseLink: NO];
+    NSDictionary *d = [manager attributesOfItemAtPath:p error:nil];
 	return [[d objectForKey: NSFileSize] unsignedLongLongValue];
 }
 
@@ -138,11 +128,11 @@
 	NSString *p = [path stringByAppendingPathComponent: name];
     if ([manager fileExistsAtPath: p] == YES)
     {
-	if ([manager removeFileAtPath: p handler: nil] == NO)
+        if ([manager removeItemAtPath:p error:nil] == NO)
     	{
-		NSLog(@"Cannot remove file %@", p);
-		return NO;
-	}
+            NSLog(@"Cannot remove file %@", p);
+            return NO;
+        }
     }
 	return YES;
 }
@@ -160,7 +150,7 @@
     }
 	if ([manager fileExistsAtPath: nu] == YES)
     {
-		if ([manager removeFileAtPath: nu handler: nil] == NO)
+        if ([manager removeItemAtPath:nu error:nil] == NO)
         {
 			NSLog(@"Cannot remove %@", nu);
 			return;
@@ -199,90 +189,6 @@ Returns a stream writing this file. */
 	  return nil;
        }
 }
-
-/**
-* So we can do some byte-to-hexchar conversion below
- */
-#if 0
-private static final char[] HEX_DIGITS =
-{'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-#endif
-
-/** Constructs a {@link Lock} with the specified name.  Locks are implemented
-* with {@link File#createNewFile() }.
-*
-* <p>In JDK 1.1 or if system property <I>disableLuceneLocks</I> is the
-* string "true", locks are disabled.  Assigning this property any other
-* string will <B>not</B> prevent creation of lock files.  This is useful for
-* using Lucene on read-only medium, such as CD-ROM.
-*
-* @param name the name of the lock file
-* @return an instance of <code>Lock</code> holding the lock
-*/
-#if 0
-public Lock makeLock(String name) {
-    StringBuffer buf = getLockPrefix();
-    buf.append("-");
-    buf.append(name);
-	
-    // create a lock file
-    final File lockFile = new File(lockDir, buf.toString());
-	
-    return new Lock() {
-		public boolean obtain() throws IOException {
-			if (DISABLE_LOCKS)
-				return true;
-			
-			if (!lockDir.exists()) {
-				if (!lockDir.mkdirs()) {
-					throw new IOException("Cannot create lock directory: " + lockDir);
-				}
-			}
-			
-			return lockFile.createNewFile();
-		}
-		public void release() {
-			if (DISABLE_LOCKS)
-				return;
-			lockFile.delete();
-		}
-		public boolean isLocked() {
-			if (DISABLE_LOCKS)
-				return false;
-			return lockFile.exists();
-		}
-		
-		public String toString() {
-			return "Lock@" + lockFile;
-		}
-    };
-}
-#endif
-
-#if 0
-private StringBuffer getLockPrefix() {
-    String dirName;                               // name to be hashed
-    try {
-		dirName = directory.getCanonicalPath();
-    } catch (IOException e) {
-		throw new RuntimeException(e.toString());
-    }
-	
-    byte digest[];
-    synchronized (DIGESTER) {
-		digest = DIGESTER.digest(dirName.getBytes());
-    }
-    StringBuffer buf = new StringBuffer();
-    buf.append("lucene-");
-    for (int i = 0; i < digest.length; i++) {
-		int b = digest[i];
-		buf.append(HEX_DIGITS[(b >> 4) & 0xf]);
-		buf.append(HEX_DIGITS[b & 0xf]);
-    }
-	
-    return buf;
-}
-#endif
 
 /** Closes the store to future operations. */
 - (void) close

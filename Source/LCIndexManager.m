@@ -38,7 +38,7 @@
 	{
 		if ([manager fileExistsAtPath: path isDirectory: &isDir]) {
 			/* (3), remove path */
-			[manager removeFileAtPath: path handler: nil];
+            [manager removeItemAtPath:path error:nil];
 		}
 	}
 	else

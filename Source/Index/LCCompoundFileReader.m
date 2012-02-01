@@ -150,15 +150,8 @@
 		long offset = [stream readLong];
 		iden = [stream readString];
 		
-#if 1
 		if (i > 0)
 			[(LCFileEntry *)[entries objectForKey: prevIden] setLength: offset - prevOffset];
-#else
-		if (entry != nil) {
-			// set length of the previous entry
-			[entry setLength: offset - [entry offset]];
-		}
-#endif
 		
 		entry = [[LCFileEntry alloc] init];
 		[entry setOffset: offset];

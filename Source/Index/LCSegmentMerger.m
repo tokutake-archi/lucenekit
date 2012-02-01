@@ -1,4 +1,4 @@
-#include "LCSegmentMerger.h"
+#import "LCSegmentMerger.h"
 #include "LCSegmentMergeInfo.h"
 #include "LCSegmentMergeQueue.h"
 #include "LCFieldInfos.h"

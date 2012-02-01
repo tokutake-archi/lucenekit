@@ -27,7 +27,7 @@
 	NSMutableSet *result = [[NSMutableSet alloc] init];
 	AUTORELEASE(result);
 	
-	NSString *s = [NSString stringWithContentsOfFile: path];
+	NSString *s = [NSString stringWithContentsOfFile: path encoding:NSUTF8StringEncoding error:nil];
 	//  NSString *word;
 	if (s == nil) return nil; 
 	NSArray *a = [s componentsSeparatedByString: @"\n"];

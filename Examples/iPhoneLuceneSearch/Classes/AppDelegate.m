@@ -18,7 +18,8 @@ static NSString *FIELD_PATH = @"P";
                                                               create: YES];
     
     int i = 0;
-    char buffer[40000];
+    const int BUFFER_SIZE = 1024 * 512;
+    char buffer[BUFFER_SIZE];
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"txt"]; 
     
     NSLog(@"opening %@", filePath);
@@ -27,16 +28,16 @@ static NSString *FIELD_PATH = @"P";
     
     if (fh) while(!feof(fh)) {
         
-        if (fgets(buffer, 40000, fh) == NULL) {
+        if (fgets(buffer, BUFFER_SIZE, fh) == NULL) {
             NSLog(@"no further line");
             break;
         }
         
         NSLog(@"* %d", i);
         
-        NSString *line = [[NSString alloc] initWithCString:buffer];
+        NSString *line = [[NSString alloc] initWithCString:buffer encoding:NSUTF8StringEncoding];
 
-        LCDocument *d = [[LCDocument alloc] init];
+        LCDocument *document = [[LCDocument alloc] init];
 
 
         LCField *f1 = [[LCField alloc] initWithName: FIELD_TEXT
@@ -48,15 +49,15 @@ static NSString *FIELD_PATH = @"P";
                                    string: [NSString stringWithFormat:@"some/path/to/%d", i]
                                     store: LCStore_YES
                                     index: LCIndex_NO];
-        [d addField: f1];
-        [d addField: f2];
+        [document addField: f1];
+        [document addField: f2];
 
         [f1 release];
         [f2 release];
 
-        [writer addDocument: d];
+        [writer addDocument: document];
 
-        [d release];
+        [document release];
         
         [line release];
 
@@ -75,14 +76,12 @@ static NSString *FIELD_PATH = @"P";
 
 - (LCFSDirectory*) createFileDirectory
 {
-    // FIXME should be the application support folder
-    //NSString *supportPath = @".";
     NSString *supportPath = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 
     NSString *path = [supportPath stringByAppendingPathComponent:@"index.idx"];
 
     if ([[NSFileManager defaultManager] isReadableFileAtPath:path]) {
-        return [[LCFSDirectory alloc] initWithPath:path create: NO];
+        return [[LCFSDirectory alloc] initWithPath:path create: YES];
     }
 
     LCFSDirectory *rd = [[LCFSDirectory alloc] initWithPath:path create: YES];
@@ -94,7 +93,7 @@ static NSString *FIELD_PATH = @"P";
 
 - (LCFSDirectory*) createRamDirectory
 {
-    LCFSDirectory *rd = [[LCRAMDirectory alloc] init];
+    LCFSDirectory *rd = (LCFSDirectory *)[[LCRAMDirectory alloc] init];
 
     [self fillDirectory:rd];
     
@@ -106,7 +105,6 @@ static NSString *FIELD_PATH = @"P";
 
     [window makeKeyAndVisible];
 
-    //LCFSDirectory *rd = [self createRamDirectory];
     LCFSDirectory *rd = [self createFileDirectory];
 
     NSLog(@"opening searcher");

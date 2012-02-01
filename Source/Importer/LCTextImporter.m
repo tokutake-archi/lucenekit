@@ -8,10 +8,10 @@
 {
 	if ([[self types] containsObject: type] == NO) return NO;
 	[attributes setObject: path forKey: LCPathAttribute];
-	[attributes setObject: [NSString stringWithContentsOfFile: path]
+	[attributes setObject: [NSString stringWithContentsOfFile: path encoding:NSUTF8StringEncoding error:nil]
 				   forKey: LCTextContentAttribute];
 	NSFileManager *manager = [NSFileManager defaultManager];
-	NSDictionary *attribs = [manager fileAttributesAtPath: path traverseLink: YES];
+    NSDictionary *attribs = [manager attributesOfItemAtPath:path error:nil];
 	NSDate *modificationDate = [attribs objectForKey: NSFileModificationDate];
 	if ([modificationDate isEqualToDate: [attributes objectForKey: LCContentModificationDateAttribute]] == NO)
 	{
